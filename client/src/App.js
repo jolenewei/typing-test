@@ -25,7 +25,7 @@ function App() {
     }
 
     const handleScoreSubmit = async ({ wpm, accuracy }) => {
-        const res = await fetch('http://localhost:5000/api/scores', {
+        const res = await fetch('http://localhost:5050/api/scores', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ uid: user.uid, wpm, accuracy }),
@@ -36,7 +36,7 @@ function App() {
 
     useEffect(() => {
         if (user) {
-            fetch(`http://localhost:5000/api/scores/${user.uid}`)
+            fetch(`http://localhost:5050/api/scores/${user.uid}`)
                 .then(res => res.json())
                 .then(setScores);
         }
