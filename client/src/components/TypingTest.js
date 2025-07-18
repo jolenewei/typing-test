@@ -70,7 +70,7 @@ function TypingTest({ onScoreSubmit }) {
     return (
         <div className="typing-test" onKeyDown={handleKeyDown} tabIndex={0} ref={containerRef}>
             <div className="word-select">
-                {[5, 10, 20, 30, 50].map(count => (
+                {[5, 10, 20, 30, 50, 80].map(count => (
                     <button key={count} onClick={() => startTest(count)}>
                         {count} words
                     </button>

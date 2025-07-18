@@ -1,55 +1,67 @@
 import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import TypingTest from './components/TypingTest';
 import StatsChart from './components/StatsChart';
+import ProfileMenu from './components/ProfileMenu';
+import StatsPage from './pages/StatsPage';
+import LoginPage from './pages/LoginPage';
 import { auth } from './firebase';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import './styles/App.scss';
 
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
 function App() {
-    const [user, setUser] = useState(null);
-    const [scores, setScores] = useState([]);
+  const [user, setUser] = useState(null);
+  const [scores, setScores] = useState([]);
 
-    useEffect(() => {
-        auth.onAuthStateChanged(setUser);
-    }, []);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      if (user && !user.isGuest) fetchScores(user.uid);
+    });
+    return () => unsubscribe();
+  }, []);
 
-    const handleLogin = async () => {
-        const provider = new GoogleAuthProvider();
-        try {
-            const result = await signInWithPopup(auth, provider);
-            setUser(result.user);
-            fetchScores();
-        } catch (error) {
-            console.error("Login failed:", error);
-        }
-    }
+  const fetchScores = async (uid) => {
+    const res = await fetch(`http://localhost:5050/api/scores/${uid}`);
+    const data = await res.json();
+    setScores(data);
+  };
 
-    const handleScoreSubmit = async ({ wpm, accuracy }) => {
-        const res = await fetch('http://localhost:5050/api/scores', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ uid: user.uid, wpm, accuracy }),
-        });
-        const newScore = await res.json();
-        setScores([newScore, ...scores]);
-    };
+  const handleScoreSubmit = async ({ wpm, accuracy, wordCount }) => {
+    if (user?.isGuest) return;
+    const res = await fetch('http://localhost:5050/api/scores', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid: user.uid, wpm, accuracy, wordCount }),
+    });
+    const newScore = await res.json();
+    setScores((prev) => [newScore, ...prev]);
+  };
 
-    useEffect(() => {
-        if (user) {
-            fetch(`http://localhost:5050/api/scores/${user.uid}`)
-                .then(res => res.json())
-                .then(setScores);
-        }
-    }, [user]);
-
-    if (!user) return <button onClick={handleLogin}>login with google</button>
-
-    return (
-        <div className="app">
-            <h1>typing test</h1>
+  return (
+    <Routes>
+      <Route path="/" element={
+        user ? (
+          <div className="app">
+            <ProfileMenu />
+            <h1 className="title">typing test</h1>
             <TypingTest onScoreSubmit={handleScoreSubmit} />
             <StatsChart scores={scores} />
-        </div>
-    );
+          </div>
+        ) : (
+          <LoginPage setUser={setUser} />
+        )
+      } />
+      <Route path="/stats" element={<StatsPage scores={scores} />} />
+    </Routes>
+  );
 }
-export default App;
+
+export default AppWrapper;
