@@ -13,17 +13,39 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function StatsChart({ scores }) {
+    const reversedScores = [...scores].reverse();
+
     const data = {
-        labels: scores.map(s => new Date(s.timestamp).toLocaleDateString()),
+        labels: reversedScores.map(s => new Date(s.timestamp).toLocaleDateString()),
         datasets: [
             {
                 label: 'wpm over time',
-                data: scores.map(s => s.wpm),
+                data: reversedScores.map(s => s.wpm),
                 borderColor: 'rgba(75, 192, 192, 1)',
                 tension: 0.1,
             },
         ],
     };
-    return <Line data={data} />;
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+            title: {
+                display: false,
+            },
+        },
+        layout: {
+            padding: 20,
+        },
+    };
+
+    return (
+        <div className="chart-container">
+            <h2 className="chart-title">your typing progress</h2>
+            <Line data={data} options={options} />
+        </div>
+    );
 }
 export default StatsChart;
+
