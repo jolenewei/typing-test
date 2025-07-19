@@ -37,9 +37,7 @@ function TypingTest({ onScoreSubmit }) {
 
     useEffect(() => {
         startTest(wordCount);
-        if (containerRef.current) {
-            containerRef.current.focus();
-        }
+        containerRef.current?.focus();
     }, []);
 
     useEffect(() => {
@@ -49,7 +47,7 @@ function TypingTest({ onScoreSubmit }) {
             const wpm = Math.round((typedText.trim().split(/\s+/).length / timeTaken) * 60);
             const correctChars = typedText.split('').filter((char, idx) => char === words[idx]).length;
             const accuracy = Math.round((correctChars / words.length) * 100);
-            onScoreSubmit({ wpm, accuracy });
+            onScoreSubmit({ wpm, accuracy, wordCount });
         } else {
             const completedWords = typedText.trim().split(/\s+/).length - 1;
             setCompletedCount(completedWords);
@@ -57,7 +55,14 @@ function TypingTest({ onScoreSubmit }) {
     }, [typedText]);
 
     const handleKeyDown = (e) => {
+        if (e.shiftKey && e.key === 'Tab') {
+            e.preventDefault(); // prevent focus shift
+            startTest(wordCount);
+            return;
+        }
+
         if (ended) return;
+
         if (!startTime) setStartTime(Date.now());
 
         if (e.key === 'Backspace') {
@@ -115,10 +120,10 @@ function TypingTest({ onScoreSubmit }) {
                     </div>
                 </div>
             )}
-            <button class="restart" onClick={() => startTest(wordCount)}>restart</button>
+            <button className="restart" onClick={() => startTest(wordCount)}>restart</button>
+            <h3>tab + enter to restart</h3>
         </div>
     );
 }
 
 export default TypingTest;
-

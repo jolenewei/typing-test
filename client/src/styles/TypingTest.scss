@@ -28,6 +28,7 @@
 
     .typed {
         color: black;
+        font-weight: bold;
     }
 
     .active {
@@ -91,5 +92,12 @@
             background: black;
             color: white;
         }
+    }
+    h3 {
+        margin-left: 47%;
+        font-size: 14px;
+        opacity: 0.5;
+        font-weight: normal;
+        margin-top: 8px;
     }
 }

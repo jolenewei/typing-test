@@ -4,6 +4,7 @@ const scoreSchema = new mongoose.Schema({
     uid: String,
     wpm: Number,
     accuracy: Number,
+    wordCount: Number,
     timestamp: {type: Date, default: Date.now},
 });
 
