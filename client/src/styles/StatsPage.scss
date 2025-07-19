@@ -1,4 +1,6 @@
 .stats-page {
+    height: 100%;
+    max-height: 600px;
     text-align: center;
     padding: 2rem;
     font-family: 'Quicksand', sans-serif;
@@ -29,8 +31,51 @@
     }
 
     .chart-container {
-        margin-top: -1.5rem;
-        scale: 0.96;
+        max-height: 600px;
+        margin-left: 10%;
+        width: 80%;
+        height: 600px;
+        scale: 0.9;
+        background: transparent;
+        border-radius: 12px;
+        margin-top: -30px;
+    }
+
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+
+        .chart-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: left;
+            flex: 1;
+            color: #333;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+
+            select {
+                padding: 0.4rem 0.6rem;
+                font-size: 0.95rem;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+                background: white;
+                font-family: 'Quicksand', sans-serif;
+                cursor: pointer;
+
+                &:focus {
+                    outline: none;
+                    border-color: #999;
+                }
+            }
+        }
     }
 
     .back-button {

@@ -50,7 +50,7 @@ function App() {
       <Route path="/" element={
         user ? (
           <div className="app">
-            <ProfileMenu />
+            <ProfileMenu user={user}/>
             <h1 className="title">typing test</h1>
             <TypingTest onScoreSubmit={handleScoreSubmit} />
             <StatsChart scores={scores} />

@@ -4,7 +4,7 @@ import { auth } from '../firebase';
 import '../styles/ProfileMenu.scss';
 import userIcon from '../assets/user-icon.jpg';
 
-function ProfileMenu() {
+function ProfileMenu({ user }) {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
@@ -20,8 +20,9 @@ function ProfileMenu() {
             </div>
             {open && (
                 <div className="modal">
-                    <button onClick={() => navigate('/stats')}>Stats</button>
-                    <button onClick={handleLogout}>Log out</button>
+                    <div className="greeting">hi, {user?.displayName || 'guest'}</div>
+                    <button onClick={() => navigate('/stats')}>stats</button>
+                    <button onClick={handleLogout}>log out</button>
                 </div>
             )}
         </div>

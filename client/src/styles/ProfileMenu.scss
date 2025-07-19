@@ -14,7 +14,7 @@
     }
 
     .modal {
-        width: 80px;
+        width: 130px;
         margin-top: 10px;
         margin-right: 20px;
         background: white;
@@ -26,8 +26,19 @@
         position: absolute;
         right: 0;
         z-index: 10;
+        padding-bottom: 5px;
+        .greeting {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: left;
+            padding-left: 15px;
+            padding-top: 15px;
+            color: #333;
+        }
 
         button {
+            margin-top: -7px;
             padding: 8px 16px;
             border: none;
             background: none;

@@ -10,14 +10,7 @@ function TypingTest({ onScoreSubmit }) {
     const [ended, setEnded] = useState(false);
     const [completedCount, setCompletedCount] = useState(0);
     const containerRef = useRef(null);
-
-    useEffect(() => {
-        const handleWindowClick = () => {
-            containerRef.current?.focus();
-        };
-        window.addEventListener('click', handleWindowClick);
-        return () => window.removeEventListener('click', handleWindowClick);
-    }, []);
+    const wordCountRef = useRef(wordCount);
 
     const getRandomWords = (count) => {
         const shuffled = [...wordList].sort(() => 0.5 - Math.random());
@@ -28,6 +21,7 @@ function TypingTest({ onScoreSubmit }) {
         const newWords = getRandomWords(count);
         setWords(newWords.split(''));
         setWordCount(count);
+        wordCountRef.current = count; // sync ref
         setTypedText('');
         setStartTime(null);
         setEnded(false);
@@ -35,11 +29,52 @@ function TypingTest({ onScoreSubmit }) {
         setTimeout(() => containerRef.current?.focus(), 0);
     };
 
+    // initial start
     useEffect(() => {
         startTest(wordCount);
-        containerRef.current?.focus();
     }, []);
 
+    // focus on click
+    useEffect(() => {
+        const handleWindowClick = (e) => {
+            const tag = e.target.tagName;
+            const skipTags = ['SELECT', 'INPUT', 'TEXTAREA', 'BUTTON', 'OPTION'];
+            if (!skipTags.includes(tag)) {
+                containerRef.current?.focus();
+            }
+        };
+        window.addEventListener('click', handleWindowClick);
+        return () => window.removeEventListener('click', handleWindowClick);
+    }, []);
+
+    // key handling (typing, backspace, and tab + enter to restart"
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            const tag = document.activeElement?.tagName;
+            const isInput = ['SELECT', 'INPUT', 'TEXTAREA'].includes(tag);
+            if (isInput) return;
+
+            if ((e.shiftKey && e.key === 'Tab') ||(e.key === 'Tab' && e.key === 'Enter') || (e.key === 'Enter' && e.shiftKey)) {
+                e.preventDefault();
+                startTest(wordCountRef.current);
+                return;
+            }
+
+            if (ended) return;
+            if (!startTime) setStartTime(Date.now());
+
+            if (e.key === 'Backspace') {
+                setTypedText(prev => prev.slice(0, -1));
+            } else if (e.key.length === 1) {
+                setTypedText(prev => prev + e.key);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [ended, startTime]);
+
+    // completion logic
     useEffect(() => {
         if (!ended && typedText.length === words.length) {
             setEnded(true);
@@ -54,26 +89,8 @@ function TypingTest({ onScoreSubmit }) {
         }
     }, [typedText]);
 
-    const handleKeyDown = (e) => {
-        if (e.shiftKey && e.key === 'Tab') {
-            e.preventDefault(); // prevent focus shift
-            startTest(wordCount);
-            return;
-        }
-
-        if (ended) return;
-
-        if (!startTime) setStartTime(Date.now());
-
-        if (e.key === 'Backspace') {
-            setTypedText(prev => prev.slice(0, -1));
-        } else if (e.key.length === 1) {
-            setTypedText(prev => prev + e.key);
-        }
-    };
-
     return (
-        <div className="typing-test" onKeyDown={handleKeyDown} tabIndex={0} ref={containerRef}>
+        <div className="typing-test" tabIndex={-1} ref={containerRef}>
             <div className="word-select">
                 {[5, 10, 20, 30, 50, 80].map(count => (
                     <button key={count} onClick={() => startTest(count)}>
@@ -120,8 +137,9 @@ function TypingTest({ onScoreSubmit }) {
                     </div>
                 </div>
             )}
+
             <button className="restart" onClick={() => startTest(wordCount)}>restart</button>
-            <h3>tab + enter to restart</h3>
+            <h3>shift + enter to restart</h3>
         </div>
     );
 }
