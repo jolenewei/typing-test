@@ -32,7 +32,20 @@ const wordList = [
     "zoo", "aquarium", "stadium", "arena", "gym", "pool", "beach", "mountain", "hill",
     "ocean", "sink", "mirror", "what", "know", "hurt", "feel", "seen", "them",
     "success", "dance", "share", "and", "or", "but", "so", "because", "although", "if", "unless",
-    "run", "jump", "fly", "morning", "evening", "week", "year", "month", "shoot", "care"
+    "run", "jump", "fly", "morning", "evening", "week", "year", "month", "shoot", "care",
+    "love", "hate", "like", "dislike", "prefer", "enjoy", "want", "need", "wish", "hope",
+    "fly", "swim", "walk", "talk", "listen", "speak", "read", "write", "draw", "paint",
+    "toilet", "room", "straw", "banana", "can", "might", "should", "could", "would", "may",
+    "must", "shall", "will", "can", "could", "should", "would", "may", "might",
+    "say", "tell", "ask", "answer", "reply", "speak", "talk", "listen", "hear", "see",
+    "saw", "look", "watch", "read", "write", "draw", "paint", "play", "work", "study",
+    "may", "will", "sleep", "wake", "eat", "drink", "cook", "clean", "wash", "dry", "fold",
+    "old", "young", "new", "big", "long", "wide", "whale", "small", "short", "tall", "heavy",
+    "light", "fast", "slow", "hot", "cold", "warm", "cool", "dry", "wet", "hard",
+    "shy", "pie", "try", "cry", "fly", "buy", "why", "high", "sigh", "lie", "tie",
+    "die", "type", "test", "rest", "the", "and", "or", "but", "so", "because", "the", "that",
+    "this", "these", "those", "here", "there", "everywhere", "nowhere", "somewhere", "anywhere",
+    "pistol", "wall", "lamp", "simple", "complicated"
 ];
 
 export default wordList;
