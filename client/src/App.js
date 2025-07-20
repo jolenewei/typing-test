@@ -8,6 +8,8 @@ import LoginPage from './pages/LoginPage';
 import { auth } from './firebase';
 import './styles/App.scss';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
 function AppWrapper() {
   return (
     <Router>
@@ -29,14 +31,14 @@ function App() {
   }, []);
 
   const fetchScores = async (uid) => {
-    const res = await fetch(`http://localhost:5050/api/scores/${uid}`);
+    const res = await fetch(`${API_BASE_URL}/api/scores/${uid}`);
     const data = await res.json();
     setScores(data);
   };
 
   const handleScoreSubmit = async ({ wpm, accuracy, wordCount }) => {
     if (user?.isGuest) return;
-    const res = await fetch('http://localhost:5050/api/scores', {
+    const res = await fetch(`${API_BASE_URL}/api/scores/${uid}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ uid: user.uid, wpm, accuracy, wordCount }),

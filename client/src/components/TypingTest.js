@@ -32,6 +32,9 @@ function TypingTest({ onScoreSubmit }) {
     // initial start
     useEffect(() => {
         startTest(wordCount);
+        setTimeout(() => {
+            containerRef.current?.focus();
+        }, 100);
     }, []);
 
     // focus on click

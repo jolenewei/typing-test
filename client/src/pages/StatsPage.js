@@ -14,7 +14,7 @@ function StatsPage() {
       const uid = auth.currentUser?.uid;
       if (!uid) return;
 
-      const res = await fetch(`http://localhost:5050/api/scores/${uid}`);
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/scores/${uid}`);
       const data = await res.json();
       setScores(data);
 
